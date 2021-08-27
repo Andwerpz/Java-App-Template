@@ -3,6 +3,7 @@ package shapes;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
+import util.MathTools;
 import util.Point;
 import util.Vector;
 
@@ -31,6 +32,8 @@ public class Polygon extends Shape {
 			l.draw(g);
 		}
 	}
+	
+	//returns the closest point on the polygons surface to the input point
 
 	@Override
 	public double getDist(util.Point p) {
@@ -44,6 +47,40 @@ public class Polygon extends Shape {
 			}
 		}
 		return minDist;
+	}
+	
+	//returns the intersection point between this polygon and a ray
+	
+	//the current solution involves making a new line object of length 1 billion, and checking for intersection that way. As long as big numbers aren't involved with the shapes, 
+	//then this solution should work
+	
+	public util.Point getIntersectionPoint(util.Point p, Vector v){
+		double minDist = -1;
+		
+		Vector next = new Vector(v);
+		next.setMagnitude(1000000000);	//1 billion, very bandaid solution
+		Point a = new Point(p);
+		Point b = new Point(v);
+		b.addVector(next);
+		
+		Point intersectPoint = null;
+		
+		Line cur = new Line(a, b);
+		for(Line l : lines) {
+			Point nextIntersect = l.lineIntersection(cur);
+			if(nextIntersect != null) {
+				double dist = MathTools.dist(nextIntersect.x, nextIntersect.y, a.x, a.y);
+				if(minDist == -1) {
+					minDist = dist;
+					intersectPoint = nextIntersect;
+				}
+				else if(minDist > dist) {
+					minDist = dist;
+					intersectPoint = nextIntersect;
+				}
+			}
+		}
+		return intersectPoint;
 	}
 
 	@Override

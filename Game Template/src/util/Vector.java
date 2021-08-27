@@ -1,12 +1,16 @@
 package util;
 
-public class Vector extends Point{
+import util.Point;
+
+public class Vector extends util.Point{
 
 	public Vector(double x, double y) {
 		super(x, y);
 	}
 	
-	public Vector(Point a, Point b) {
+	//pointing from point a to point b
+	
+	public Vector(util.Point a, util.Point b) {
 		super(b.x - a.x, b.y - a.y);
 	}
 	

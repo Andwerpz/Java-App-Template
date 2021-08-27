@@ -38,6 +38,8 @@ public class Triangle3D extends Shape3D {
 	
 	//taken from wikipedia. 
 	//moller trumbore intersection algorithm
+	
+	//returns the intersection point between this triangle and a 3dvector if they intersect, null if they dont
 
     public Point3D getIntersectPoint(Point3D rayOrigin, Vector3D rayVector) {
     	rayVector.normalize();
