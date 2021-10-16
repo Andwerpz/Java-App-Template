@@ -36,7 +36,6 @@ public class Line3D extends Shape3D{
 		return null;
 	}
 
-	@Override
 	public Vector3D getNormal(Point3D p, Vector3D v) {
 		// TODO Auto-generated method stub
 		return null;

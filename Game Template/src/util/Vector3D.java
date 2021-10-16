@@ -14,10 +14,20 @@ public class Vector3D extends Point3D{
 		super(v.x, v.y, v.z);
 	}
 	
+	public Vector3D(Point3D p) {
+		super(p.x, p.y, p.z);
+	}
+	
 	public void addVector(Vector3D v) {
 		this.x += v.x;
 		this.y += v.y;
 		this.z += v.z;
+	}
+	
+	public void subtractVector(Vector3D v) {
+		this.x -= v.x;
+		this.y -= v.y;
+		this.z -= v.z;
 	}
 	
 	public double getMagnitude() {

@@ -18,6 +18,10 @@ public class Vector extends util.Point{
 		super(a.x, a.y);
 	}
 	
+	public Vector(util.Point a) {
+		super(a.x, a.y);
+	}
+	
 	public double getMagnitude() {
 		return Math.sqrt(this.x * this.x + this.y * this.y);
 	}

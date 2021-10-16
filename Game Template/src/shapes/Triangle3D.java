@@ -10,10 +10,13 @@ public class Triangle3D extends Shape3D {
 	
 	public Point3D a, b, c;	//try to instantiate in clockwise order, so calculating normals are easy
 	
+	public Vector3D normal;
+	
 	public Triangle3D(Point3D a, Point3D b, Point3D c) {
 		this.a = new Point3D(a);
 		this.b = new Point3D(b);
 		this.c = new Point3D(c);
+		this.normal = this.calculateNormal();
 	}
 
 	public void tick() {
@@ -24,8 +27,7 @@ public class Triangle3D extends Shape3D {
 		
 	}
 	
-	public Vector3D getNormal(Point3D p, Vector3D v) {
-		//System.out.println("ES");
+	public Vector3D calculateNormal() {
 		Point3D vertex0 = new Point3D(a);
         Point3D vertex1 = new Point3D(b);
         Point3D vertex2 = new Point3D(c);

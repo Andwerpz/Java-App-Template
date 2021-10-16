@@ -106,7 +106,6 @@ public class Polygon3D extends Shape3D {
 		return minPoint;
 	}
 
-	@Override
 	public Vector3D getNormal(Point3D p, Vector3D v) {
 		double minDist = Integer.MAX_VALUE;
 		int minIndex = 0;
@@ -120,7 +119,7 @@ public class Polygon3D extends Shape3D {
 				}
 			}
 		}
-		return triangles.get(minIndex).getNormal(p, v);
+		return triangles.get(minIndex).normal;
 	}
 
 }
