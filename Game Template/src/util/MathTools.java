@@ -1,7 +1,6 @@
 package util;
 
 import java.util.ArrayList;
-
 import main.MainPanel;
 
 public class MathTools {
@@ -20,12 +19,38 @@ public class MathTools {
 		return dx / dy;
 	}
 	
+	public static double radianAngleBetweenVectors(Vector a, Vector b) {
+		return Math.acos(dotProduct(a, b) / (a.getMagnitude() * b.getMagnitude()));
+	}
+	
+	// --------------- ML --------------
+	
+	public static double sigmoid(double x) {
+		return (1d / (1d + Math.pow(Math.E,(-1d * x))));
+	}
+	
+	//derivative of sigmoid function with center at 0
+	
+	public static double sigmoidDerivative(double x) {
+		return sigmoid(x) * (1d - sigmoid(x));
+	}
+	
+	public static double relu(double x) {
+		return Math.max(0, x);
+	}
+	
+	// -------------- Linear Algebra -----------
+	
 	public static double dotProduct(Vector a, Vector b) {
 		return a.x * b.x + a.y * b.y;
 	}
 	
 	public static double dotProduct3D(Vector3D a, Vector3D b) {
 		return a.x * b.x + a.y * b.y + a.z * b.z;
+	}
+	
+	public static double crossProduct2D(Vector a, Vector b) {
+		return a.x * b.y - a.y * b.x;
 	}
 	
 	public static Vector3D crossProduct(Vector3D a, Vector3D b) {
@@ -40,28 +65,97 @@ public class MathTools {
 		
 	}
 	
-	public static double radianAngleBetweenVectors(Vector a, Vector b) {
-		return Math.acos(dotProduct(a, b) / (a.getMagnitude() * b.getMagnitude()));
+	//takes in a line, lineP + lineVec, and two points, and return if the two points are on the same side of the line
+	
+	public static boolean pointOnSameSideOfLine(Point lineP, Vector lineVec, Point a, Point b) {
+		
+		//copy a and b
+		Point p1 = new Point(a);
+		Point p2 = new Point(b);
+		
+		//first offset lineP, p1, and p2 so that lineP is at the origin
+		p1.subtractVector(new Vector(lineP));
+		p2.subtractVector(new Vector(lineP));
+		
+		//calculate the line perpendicular to the input line
+		//rotate the line 90 deg
+		Vector perpendicular = new Vector(lineVec.y, -lineVec.x);
+		
+		//now take dot product of the perpendicular vector with both points
+		//if both dot products are negative or positive, then the points are on the same side of the line
+		Vector v1 = new Vector(p1);
+		Vector v2 = new Vector(p2);
+		double d1 = MathTools.dotProduct(perpendicular, v1);
+		double d2 = MathTools.dotProduct(perpendicular, v2);
+		
+		if(d1 * d2 >= 0) {
+			return true;
+		}
+		
+		return false;
+		
 	}
 	
-	public static double sigmoid(double x) {
-		return (1d / (1d + Math.pow(Math.E,(-1d * x))));
+	//takes in a line and a line segment, and returns where they intersect, if they intersect.
+	//if they don't intersect, returns null
+	
+	public static Point lineLineSegmentIntersect(Point a, Point b, Point lineP, Vector lineVec) {
+		
+		//points: p, q
+		//vectors: r, s
+		//scalars: t, u 
+		//p + tr = q + us
+		//if p + r is the line segment and q + s is the line, only t must be bounded from 0 - 1.
+		//this means we only have to solve for t, and if t is between 0 and 1, then there is an intersection at p + tr. 
+		
+		//solving for t
+		//t = ((q - p) * s) / (r * s)
+		//remember: cross product of 2d vectors gives a scalar
+		Vector qp = new Vector(a, lineP);
+		Vector s = new Vector(lineVec);
+		Vector r = new Vector(a, b);
+		
+		double t = MathTools.crossProduct2D(qp, s) / MathTools.crossProduct2D(r, s);
+		
+		//intersection
+		if(t >= 0 && t <= 1) {
+			//calculate intersection point
+			r.multiply(t);
+			Point ans = new Point(a);
+			ans.addVector(r);
+			return ans;
+		}
+		
+		//no intersection
+		return null;
+		
 	}
 	
-	//derivative of sigmoid function with center at 0
-	
-	public static double sigmoidDerivative(double x) {
-		return sigmoid(x) * (1d - sigmoid(x));
-	}
-	
-	//for ML usage
-	
-	public static double relu(double x) {
-		return Math.max(0, x);
+	//assuming that the points are arranged into a convex hull.
+	//get the centroid of each triangle, then take the weighted average of the centroids, using the area of each triangle as the weight.
+	public static Point getCentroid(ArrayList<Point> points) {
+		double accumulatedArea = 0.0f;
+		double centerX = 0.0f;
+		double centerY = 0.0f;
+
+		for (int i = 0, j = points.size() - 1; i < points.size(); j = i++) {
+			double temp = points.get(i).x * points.get(j).y - points.get(j).x * points.get(i).y;
+			accumulatedArea += temp;
+			centerX += (points.get(i).x + points.get(j).x) * temp;
+			centerY += (points.get(i).y + points.get(j).y) * temp;
+		}
+
+		if (Math.abs(accumulatedArea) < 1E-7f) {
+			return new Point(0, 0);
+		}
+
+		accumulatedArea *= 3f;
+		return new Point(centerX / accumulatedArea, centerY / accumulatedArea);
 	}
 	
 	// -------------- 3D graphics -------------- 
 	
+	//camera settings
 	public static double aspectRatio = (double) MainPanel.HEIGHT / (double) MainPanel.WIDTH;
 	public static double fov = Math.toRadians(90);
 	public static double fovScalingFactor = 1d / Math.tan(fov * 0.5d);

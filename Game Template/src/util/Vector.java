@@ -1,7 +1,5 @@
 package util;
 
-import util.Point;
-
 public class Vector extends util.Point{
 
 	public Vector(double x, double y) {
