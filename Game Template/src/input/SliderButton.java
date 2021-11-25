@@ -102,6 +102,8 @@ public class SliderButton extends Input{
 	
 	public void draw(Graphics g) {
 		
+		GraphicsTools.enableTextAntialiasing(g);
+		
 		g.setColor(bodyColor);
 		g.fillRect(x, y, (int) head.getX() - this.x, height);
 		

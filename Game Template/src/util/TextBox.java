@@ -70,6 +70,7 @@ public class TextBox {
 	public void draw(Graphics g) {
 		//g.drawRect(x, y, width, height);
 		int pointer = y + font.getSize();
+		GraphicsTools.enableTextAntialiasing(g);
 		for(int i = 0; i < lines.size(); i++) {
 			g.setFont(font);
 			g.drawString(lines.get(i), x, pointer);

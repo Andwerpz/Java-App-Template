@@ -98,6 +98,7 @@ public class Button extends Input{
 	
 	public void draw(Graphics g) {
 		if(!this.drawImage) {
+			GraphicsTools.enableTextAntialiasing(g);
 			g.setColor(baseColor);
 			
 			if(pressed) {

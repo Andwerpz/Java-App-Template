@@ -6,6 +6,9 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+
+import util.GraphicsTools;
+
 import java.awt.Rectangle;
 
 public class ToggleButton extends Button{
@@ -25,6 +28,8 @@ public class ToggleButton extends Button{
     
     @Override
     public void draw(Graphics g) {
+    	
+    	GraphicsTools.enableTextAntialiasing(g);
     	
     	g.setColor(getBaseColor());
     	
