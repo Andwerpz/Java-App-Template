@@ -4,32 +4,36 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
-import button.ButtonManager;
-import button.Button;
-import button.SliderButton;
-import button.ToggleButton;
+import input.InputManager;
+import input.Button;
+import input.SliderButton;
+import input.TextField;
+import input.ToggleButton;
 import util.TextBox;
 
 public class MenuState extends State{
 	
-	ButtonManager bm;
+	InputManager im;
 	
 	TextBox tb;
 
 	public MenuState(StateManager gsm) {
 		super(gsm);
 		
-		bm = new ButtonManager();
+		im = new InputManager();
 		
-		bm.addSliderButton(new SliderButton(50, 50, 200, 10, 0, 100, "slider 1", Color.RED));
-		bm.addSliderButton(new SliderButton(50, 100, 400, 10, 0, 100, "best slider", Color.YELLOW));
+		im.addInput(new SliderButton(50, 50, 200, 10, 0, 100, "slider 1", "slider1", Color.RED));
+		im.addInput(new SliderButton(50, 100, 400, 10, 0, 100, "best slider", "slider2", Color.YELLOW));
 		
-		bm.addButton(new Button(50, 200, 100, 100, "weird button", Color.pink, Color.blue));
+		im.addInput(new Button(50, 200, 100, 100, "weird button", "button1", Color.pink, Color.blue));
 		
-		bm.addToggleButton(new ToggleButton(200, 200, 100, 100, "Toggle"));
+		im.addInput(new ToggleButton(200, 200, 100, 100, "Toggle", "toggle1"));
+		
+		im.addInput(new TextField(25, 125, 200, "name the button", "textfield1"));
 		
 		tb = new TextBox(100, 300, 300, 300, "This simulation is based off of the Numberphile video, Darts in Higher Dimensions. "
 				+ "If you haven't watched it yet, you should go check it out. In the beginning of the video, "
@@ -57,43 +61,48 @@ public class MenuState extends State{
 	@Override
 	public void tick(Point mouse) {
 
-		bm.tick(mouse);
+		im.tick(mouse);
 		
 	}
 
 	@Override
 	public void draw(Graphics g) {
 		
-		bm.draw(g);
+		im.draw(g);
 		tb.draw(g);
 		
 	}
 
 	@Override
-	public void keyPressed(int k) {
-		//TODO Auto-generated method stub
+	public void keyPressed(KeyEvent arg0) {
+		im.keyPressed(arg0);
 		
 	}
 
 	@Override
-	public void keyReleased(int k) {
-		// TODO Auto-generated method stub
+	public void keyReleased(KeyEvent arg0) {
 		
 	}
 
 	@Override
-	public void keyTyped(int k) {
-		// TODO Auto-generated method stub
-		
+	public void keyTyped(KeyEvent arg0) {
+		im.keyTyped(arg0);
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 
-		if(bm.buttonClicked(arg0).equals("weird button")) {
-			System.out.println("wlekrjwelk");
-			bm.sliderButtons.get(0).setVal(50);
-			bm.sliderButtons.get(1).setVal(75);
+		String which = im.mouseClicked(arg0);
+		
+		if(which == null) {
+			return;
+		}
+		
+		switch(which) {
+		case "button1":
+			im.setVal("slider1", 50);
+			im.setVal("slider2", 75);
+			break;
 		}
 			
 		
@@ -116,14 +125,14 @@ public class MenuState extends State{
 	@Override
 	public void mousePressed(MouseEvent arg0) {
 		
-		bm.pressed(arg0);
+		im.mousePressed(arg0);
 
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
 		
-		bm.mouseReleased();
+		im.mouseReleased(arg0);
 		
 	}
 

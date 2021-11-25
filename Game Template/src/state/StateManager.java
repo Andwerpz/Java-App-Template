@@ -4,6 +4,7 @@ import java.util.Stack;
 import java.awt.Graphics;
 import java.awt.MouseInfo;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
@@ -35,16 +36,16 @@ public class StateManager {
 		
 	}
 	
-	public void keyPressed(int k) {
-		states.peek().keyPressed(k);
+	public void keyPressed(KeyEvent arg0) {
+		states.peek().keyPressed(arg0);
 	}
 	
-	public void keyReleased(int k) {
-		states.peek().keyReleased(k);
+	public void keyReleased(KeyEvent arg0) {
+		states.peek().keyReleased(arg0);
 	}
 	
-	public void keyTyped(int k) {
-		states.peek().keyTyped(k);
+	public void keyTyped(KeyEvent arg0) {
+		states.peek().keyTyped(arg0);
 	}
 	
 	public void mouseClicked(MouseEvent arg0) {

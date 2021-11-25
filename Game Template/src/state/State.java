@@ -2,6 +2,7 @@ package state;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
@@ -19,9 +20,9 @@ public abstract class State {
 	public abstract void tick(Point mouse2);
 	public abstract void draw(Graphics g);
 	
-	public abstract void keyPressed(int k);
-	public abstract void keyReleased(int k);
-	public abstract void keyTyped(int k);
+	public abstract void keyPressed(KeyEvent arg0);
+	public abstract void keyReleased(KeyEvent arg0);
+	public abstract void keyTyped(KeyEvent arg0);
 	
 	public abstract void mouseClicked(MouseEvent arg0);
 	public abstract void mouseEntered(MouseEvent arg0);

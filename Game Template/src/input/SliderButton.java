@@ -1,4 +1,4 @@
-package button;
+package input;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -8,7 +8,9 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
-public class SliderButton {
+import util.GraphicsTools;
+
+public class SliderButton extends Input{
 	
 	private int x, y, width, height, low, high;
 	private String text;
@@ -22,8 +24,8 @@ public class SliderButton {
 	
 	private boolean isPressed = false;
 
-	public SliderButton(int x, int y, int width, int height, int low, int high, String text) {
-
+	public SliderButton(int x, int y, int width, int height, int low, int high, String text, String name) {
+		super(name);
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -33,7 +35,7 @@ public class SliderButton {
 		
 		this.val = low;
 		
-		this.head = new Button(x, y, height, height, "", Color.white, Color.gray);
+		this.head = new Button(x, y, height, height, "", name, Color.white, Color.gray);
 		
 		this.text = text;
 		this.font = new Font("Dialogue", Font.PLAIN, 12);
@@ -42,8 +44,8 @@ public class SliderButton {
 		
 	}
 	
-	public SliderButton(int x, int y, int width, int height, int low, int high, String text, Color bodyColor) {
-
+	public SliderButton(int x, int y, int width, int height, int low, int high, String text, String name, Color bodyColor) {
+		super(name);
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -53,7 +55,7 @@ public class SliderButton {
 		
 		this.val = low;
 		
-		this.head = new Button(x, y, height, height, "", Color.white, bodyColor);
+		this.head = new Button(x, y, height, height, "", name, Color.white, bodyColor);
 		
 		this.text = text;
 		this.font = new Font("Dialogue", Font.PLAIN, 12);
@@ -62,18 +64,18 @@ public class SliderButton {
 		
 	}
 	
-	public void pressed(MouseEvent m) {
-		
-		if(head.isPressed(new java.awt.Point(m.getX(), m.getY()))) {
+	public boolean pressed(MouseEvent m) {
+		if(head.pressed(m)) {
 			isPressed = true;
-			head.pressed(m);
+			return true;
 		}
-		
+		isPressed = false;
+		return false;
 	}
 	
-	public void released() {
+	public void released(MouseEvent arg0) {
 		isPressed = false;
-		head.released();
+		head.released(arg0);
 	}
 	
 	public void setText(String s) {
@@ -111,7 +113,7 @@ public class SliderButton {
 		
 		g.drawString(text, x, y - (int) ((double)font.getSize() * (double)0.5));
 		
-		int valWidth = calculateTextWidth(val + "");
+		int valWidth = GraphicsTools.calculateTextWidth(val + "", this.font);
 		
 		g.drawString(val + "", this.x + width - valWidth, y - (int) ((double)font.getSize() * (double)0.5));
 		
@@ -122,20 +124,10 @@ public class SliderButton {
 		head.draw(g);
 		
 	}
-	
-	public int calculateTextWidth(String s) {
-		BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
-		FontMetrics fm = img.getGraphics().getFontMetrics(font);
-		return fm.stringWidth(s);
-	}
-	
+
 	public void tick(Point mouse) {
 		
-		//System.out.println(head.getX());
-		
 		if(isPressed) {
-			
-			//System.out.println("slider pressed");
 			
 			int newX = (int) (mouse.x - this.height / 2);
 			
@@ -152,11 +144,8 @@ public class SliderButton {
 			double percentFilled = (head.getX() - this.x) / (double)(this.width - this.height); 
 			this.val = (int) (low + (high - low) * percentFilled);
 			
-			//System.out.println(this.val + " " + percentFilled);
 		}
 		
-		
-		//System.out.println(val);
 		
 	}
 

@@ -135,17 +135,17 @@ public class MainPanel extends JPanel implements Runnable, KeyListener, MouseLis
 
 	@Override
 	public void keyPressed(KeyEvent arg0) {
-		gsm.keyPressed(arg0.getKeyCode());
+		gsm.keyPressed(arg0);
 	}
 
 	@Override
 	public void keyReleased(KeyEvent arg0) {
-		gsm.keyReleased(arg0.getKeyCode());
+		gsm.keyReleased(arg0);
 	}
 
 	@Override
 	public void keyTyped(KeyEvent arg0) {
-		gsm.keyTyped(arg0.getKeyCode());
+		gsm.keyTyped(arg0);
 	}
 
 	@Override

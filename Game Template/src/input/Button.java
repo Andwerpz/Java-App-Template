@@ -1,4 +1,4 @@
-package button;
+package input;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
 
 import util.GraphicsTools;
 
-public class Button {
+public class Button extends Input{
 	
 	private int x, y, width, height;
 	private String text;
@@ -28,8 +28,8 @@ public class Button {
 	private boolean maintainImageAspectRatio; //if true, then the image will be just be drawn to fill the button, without regard to if it goes out of the button
 	private BufferedImage img;
 	
-	public Button(int x, int y, int width, int height, String text) {
-		
+	public Button(int x, int y, int width, int height, String text, String name) {
+		super(name);
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -44,8 +44,8 @@ public class Button {
 		this.drawImage = false;
 	}
 	
-	public Button(int x, int y, int width, int height, String text, Color baseColor, Color pressedColor) {
-		
+	public Button(int x, int y, int width, int height, String text, String name, Color baseColor, Color pressedColor) {
+		super(name);
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -63,7 +63,8 @@ public class Button {
 		
 	}
 	
-	public Button(int x, int y, int width, int height, BufferedImage img, boolean maintainImageAspectRatio, String text) {
+	public Button(int x, int y, int width, int height, String name, BufferedImage img, boolean maintainImageAspectRatio, String text) {
+		super(name);
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -187,49 +188,26 @@ public class Button {
 		return pressedColor;
 	}
 	
-	//is the mouse inside the boundaries of this button
-	public boolean contains(Point m) {
-		Rectangle rect = new Rectangle(this.x, this.y, this.width, this.height);
-		return rect.contains(m);
-	}
-	
-	public void pressed(MouseEvent m) {
+	public boolean pressed(MouseEvent arg0) {
 		Rectangle r = new Rectangle(x, y, width, height);
-		if(r.contains(new Point(m.getX(), m.getY()))) {
+		if(r.contains(new Point(arg0.getX(), arg0.getY()))) {
 			pressed = true;
-		}
-	}
-	
-	public boolean isPressed(Point m) {
-		Rectangle r = new Rectangle(x, y, width, height);
-		if(r.contains(m)) {
 			return true;
 		}
+		pressed = false;
 		return false;
 	}
 	
-	public void released() {
-		pressed = false;
-	}
-	
-//	public boolean isClicked(int x, int y) {
-//		
-//		if(this.contains(new Point(x, y))) {
-//			return true;
-//		}
-//		
-//		return false;
-//		
-//	}
-	
-	public boolean isClicked(MouseEvent arg0) {
+	public boolean clicked(MouseEvent arg0) {
 		Rectangle r = new Rectangle(x, y, width, height);
 		if(r.contains(new Point(arg0.getX(), arg0.getY()))) {
 			return true;
 		}
-		
 		return false;
-		
+	}
+	
+	public void released(MouseEvent arg0) {
+		this.pressed = false;
 	}
 
 
