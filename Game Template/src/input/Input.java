@@ -33,4 +33,5 @@ public abstract class Input {
 	
 	public void keyTyped(KeyEvent arg0) {}
 	
+	public void keyReleased(KeyEvent arg0) {}
 }

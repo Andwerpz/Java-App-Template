@@ -81,7 +81,7 @@ public class MenuState extends State{
 
 	@Override
 	public void keyReleased(KeyEvent arg0) {
-		
+		im.keyReleased(arg0);
 	}
 
 	@Override

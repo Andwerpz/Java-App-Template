@@ -102,4 +102,10 @@ public class InputManager {
 		}
 	}
 	
+	public void keyReleased(KeyEvent arg0) {
+		for(Input i : inputs) {
+			i.keyReleased(arg0);
+		}
+	}
+	
 }
