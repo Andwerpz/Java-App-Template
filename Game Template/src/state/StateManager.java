@@ -1,6 +1,8 @@
 package state;
 
 import java.util.Stack;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.MouseInfo;
 import java.awt.Point;
@@ -29,10 +31,12 @@ public class StateManager {
 	
 	public void draw(Graphics g) {
 		
+		states.peek().draw(g);
+		
+		g.setColor(Color.BLACK);
+		g.setFont(new Font("Dialogue", Font.PLAIN, 12));
 		g.drawString((int) (mouse.x) + "", (int) (mouse.x - 30), (int) (mouse.y - 10));
 		g.drawString((int) (mouse.y) + "", (int) (mouse.x), (int) (mouse.y - 10));
-		
-		states.peek().draw(g);
 		
 	}
 	

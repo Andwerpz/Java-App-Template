@@ -17,10 +17,7 @@ public class Main {
 		
 		JFrame frame = new JFrame();
 		
-		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		
 		frame.setResizable(false);
 		frame.setLayout(new BorderLayout());
 		frame.add(new MainPanel(), BorderLayout.CENTER);
@@ -28,7 +25,6 @@ public class Main {
 		frame.setLocationRelativeTo(null);
 		
 		frame.setVisible(true);
-		
 		
 	}
 	

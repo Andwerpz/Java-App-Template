@@ -56,6 +56,22 @@ public class TextField extends Input{
 
 		this.pressedKeys = new HashSet<Integer>();
 	}
+	
+	public TextField(int x, int y, int width, String hintText, String name, Font font) {
+		super(name);
+		this.x = x;
+		this.y = y;
+		this.font = font; // default font for java swing
+		this.width = width;
+		this.height = font.getSize() + 4;
+		this.text = "";
+		this.hintText = hintText;
+
+		this.selectedColor = Color.gray;
+		this.textColor = Color.black;
+
+		this.pressedKeys = new HashSet<Integer>();
+	}
 
 	public void draw(Graphics g) {
 
@@ -88,10 +104,26 @@ public class TextField extends Input{
 		}
 
 		g2.setComposite(GraphicsTools.makeComposite(1));
-		g.setColor(textColor);
-
+		g2.setColor(textColor);
+		
 		g.drawRect(x, y, width, height);
-		g.drawString(text, x + 2, y + this.font.getSize() + 2);
+		
+		//drawing text into BufferedImage so that it doesn't overflow out of the text field
+		BufferedImage b = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D gImg = (Graphics2D) b.getGraphics();
+		gImg.setColor(this.textColor);
+		gImg.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		gImg.setFont(this.font);
+		
+		int textWidth = GraphicsTools.calculateTextWidth(text, font);
+		gImg.drawString(text, 2, this.font.getSize() + 2);
+		
+		//adding '|' as cursor 1px after text
+		if(this.selected && (System.currentTimeMillis() / 1000) % 2 == 0) {
+			gImg.drawLine(2 + textWidth + 1, 2, 2 + textWidth + 1, height - 2);
+		}
+		
+		g.drawImage(b, x, y, null);
 	}
 
 	public void setText(String text) {

@@ -112,7 +112,6 @@ public class SliderButton extends Input{
 		
 		g.drawRect(x, y, width, height);
 		
-		
 		g.drawString(text, x, y - (int) ((double)font.getSize() * (double)0.5));
 		
 		int valWidth = GraphicsTools.calculateTextWidth(val + "", this.font);

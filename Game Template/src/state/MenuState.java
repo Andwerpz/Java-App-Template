@@ -7,12 +7,14 @@ import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.awt.image.BufferedImage;
 
 import input.InputManager;
 import input.Button;
 import input.SliderButton;
 import input.TextField;
 import input.ToggleButton;
+import util.ScrollWindow;
 import util.TextBox;
 
 public class MenuState extends State{
@@ -20,6 +22,8 @@ public class MenuState extends State{
 	InputManager im;
 	
 	TextBox tb;
+	
+	TestScrollWindow tw;
 
 	public MenuState(StateManager gsm) {
 		super(gsm);
@@ -33,7 +37,7 @@ public class MenuState extends State{
 		
 		im.addInput(new ToggleButton(200, 200, 100, 100, "Toggle", "toggle1"));
 		
-		im.addInput(new TextField(25, 125, 200, "name the button", "textfield1"));
+		im.addInput(new TextField(25, 125, 200, "name the button", "textfield1", new Font("Arial", Font.BOLD, 24)));
 		
 		tb = new TextBox(100, 300, 300, 300, "This simulation is based off of the Numberphile video, Darts in Higher Dimensions. "
 				+ "If you haven't watched it yet, you should go check it out. In the beginning of the video, "
@@ -50,6 +54,8 @@ public class MenuState extends State{
 				+ "goes on to solve this problem with probability and math, but I just wanted to see if I "
 				+ "could get the answer using a simulation.", new Font("Times New Roman", 0, 12));
 		
+		tw = new TestScrollWindow(450, 150, 300, 400, 2000);
+		
 	}
 
 	@Override
@@ -62,6 +68,7 @@ public class MenuState extends State{
 	public void tick(Point mouse) {
 
 		im.tick(mouse);
+		tw.tick(mouse);
 		
 	}
 
@@ -70,13 +77,13 @@ public class MenuState extends State{
 		
 		im.draw(g);
 		tb.draw(g);
+		tw.draw(g);
 		
 	}
 
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 		im.keyPressed(arg0);
-		
 	}
 
 	@Override
@@ -91,6 +98,8 @@ public class MenuState extends State{
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
+		
+		tw.mouseClicked(arg0);
 
 		String which = im.mouseClicked(arg0);
 		
@@ -104,42 +113,72 @@ public class MenuState extends State{
 			im.setVal("slider2", 75);
 			break;
 		}
-			
-		
-		
 		
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-		
 		im.mousePressed(arg0);
-
+		tw.mousePressed(arg0);
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
-		
 		im.mouseReleased(arg0);
-		
+		tw.mouseReleased(arg0);
 	}
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent arg0) {
-		// TODO Auto-generated method stub
-		
+		tw.mouseWheelMoved(arg0);
 	}
 
+}
+
+class TestScrollWindow extends ScrollWindow{
+
+	public TestScrollWindow(int x, int y, int width, int height, int realHeight) {
+		super(x, y, width, height, realHeight);
+		im.addInput(new Button(100, 100, 100, 100, "Click Me", "button1"));
+		im.addInput(new SliderButton(50, 50, 200, 10, 0, 100, "slider 1", "slider1"));
+	}
+
+	@Override
+	public void repaint(Graphics g, BufferedImage b) {
+		im.draw(g);
+		for(int i = 0; i < 7; i++) {
+			g.setColor(new Color(i * 33, i * 33, i * 33));
+			g.fillRect(0, i * 33, 33, 33);
+		}
+	}
+	
+	@Override
+	public void mouseClicked(MouseEvent arg0) {
+		if(this.containsPoint(mouse)) {
+			System.out.println("CLICKED");
+
+			String which = im.mouseClicked(convertMouseEvent(arg0));
+			
+			if(which == null) {
+				return;
+			}
+			
+			switch(which) {
+			case "button1":
+				im.setVal("slider1", 50);
+				break;
+			}
+		}
+	}
+	
 }
