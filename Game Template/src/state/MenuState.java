@@ -146,6 +146,8 @@ public class MenuState extends State{
 }
 
 class TestScrollWindow extends ScrollWindow{
+	
+	public int counter = 250;
 
 	public TestScrollWindow(int x, int y, int width, int height, int realHeight) {
 		super(x, y, width, height, realHeight);
@@ -165,7 +167,6 @@ class TestScrollWindow extends ScrollWindow{
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		if(this.containsPoint(mouse)) {
-			System.out.println("CLICKED");
 
 			String which = im.mouseClicked(convertMouseEvent(arg0));
 			
@@ -176,6 +177,9 @@ class TestScrollWindow extends ScrollWindow{
 			switch(which) {
 			case "button1":
 				im.setVal("slider1", 50);
+				im.addInput(new Button(100, counter, 100, 100, "Click Me", "button1"));
+				counter += 150;
+				this.setRealHeight(this.getRealHeight() + 150);
 				break;
 			}
 		}
