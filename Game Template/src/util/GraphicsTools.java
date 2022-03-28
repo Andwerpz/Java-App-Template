@@ -11,6 +11,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.awt.image.RescaleOp;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -120,17 +121,12 @@ public class GraphicsTools {
 	//filepath is relative to this class
 	public static BufferedImage loadImage(String filepath) {
 		BufferedImage img = null;
-		InputStream is;
 		
 		System.out.print("LOADING IMAGE: " + filepath);
 		
 		try {
-			
-			is = GraphicsTools.class.getResourceAsStream(filepath);
-			img = ImageIO.read(is);
-			
+			img = ImageIO.read(new File(filepath));
 			System.out.println(" SUCCESS");
-			
 		} catch(IOException e) {
 			System.out.println(" FAILED");
 		}
