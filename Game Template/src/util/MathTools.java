@@ -23,6 +23,23 @@ public class MathTools {
 		return Math.acos(dotProduct(a, b) / (a.getMagnitude() * b.getMagnitude()));
 	}
 	
+	// --------------- Stats -----------
+	
+	//approximates a normal distribution
+	//in this case, n = 4
+	public static double irwinHallDistribution(double x) {
+		if(-2 < x && x < -1) {
+			return 0.25 * Math.pow(x + 2, 3);
+		}
+		if(-1 < x && x < 1) {
+			return 0.25 * (Math.pow(Math.abs(x), 3) * 3 - Math.pow(x, 2) * 6 + 4);
+		}
+		if(1 < x && x < 2) {
+			return 0.25 * Math.pow(2 - x, 3);
+		}
+		return 0;
+	}
+	
 	// --------------- ML --------------
 	
 	public static double sigmoid(double x) {
@@ -37,6 +54,15 @@ public class MathTools {
 	
 	public static double relu(double x) {
 		return Math.max(0, x);
+	}
+	
+	//inv sigmoid
+	public static double logit(double x) {
+		return Math.log(x / (1d - x));
+	}
+
+	public static double reluDerivative(double x) {
+		return x <= 0? 0 : 1;
 	}
 	
 	// -------------- Linear Algebra -----------
@@ -63,6 +89,25 @@ public class MathTools {
 		
 		return normal;
 		
+	}
+	
+	// takes in two line segments, and returns a vector pointing to where they
+	// intersect, null otherwise
+	static Vector line_lineCollision(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
+		// calculate the distance to intersection point
+		double uA = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / ((y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1));
+		double uB = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / ((y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1));
+
+		// if uA and uB are between 0-1, lines are colliding
+		if (uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1) {
+
+			//calculate the intersection point
+			double intersectionX = x1 + (uA * (x2 - x1));
+			double intersectionY = y1 + (uA * (y2 - y1));
+
+			return new Vector(intersectionX, intersectionY);
+		}
+		return null;
 	}
 	
 	//takes in a line, lineP + lineVec, and two points, and return if the two points are on the same side of the line
@@ -172,6 +217,21 @@ public class MathTools {
 	
 	public static double[][] pointAtMatrix = new double[][] {};
 	public static double[][] lookAtMatrix = new double[][] {};
+	
+	//xRot and yRot in radians
+	//assumes default camera position is the +z axis
+	
+	public static Point3D cameraTransform(Point3D p, Point3D camera, double xRot, double yRot) {
+		Point3D ans = new Point3D(p);
+		ans.x -= camera.x;
+		ans.y -= camera.y;
+		ans.z -= camera.z;
+		
+		ans.rotateY(-yRot);
+		ans.rotateX(-xRot);
+		
+		return ans;
+	}
 	
 	//used for scaling a point up to the window size after projection
 	
@@ -418,7 +478,7 @@ public class MathTools {
 	}
 	
 	//projects point from 3d onto the 2d screen. 
-	
+	//assumes the camera is pointing in the +z direction
 	//stores the z buffer into the z dimension
 	
 	public static Point3D projectPoint(Point3D p, double[] wOut) {	
