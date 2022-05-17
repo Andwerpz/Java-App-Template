@@ -93,7 +93,7 @@ public class MathTools {
 	
 	// takes in two line segments, and returns a vector pointing to where they
 	// intersect, null otherwise
-	static Vector line_lineCollision(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
+	public static Vector line_lineCollision(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
 		// calculate the distance to intersection point
 		double uA = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / ((y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1));
 		double uB = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / ((y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1));
@@ -141,41 +141,6 @@ public class MathTools {
 		
 	}
 	
-	//takes in a line and a line segment, and returns where they intersect, if they intersect.
-	//if they don't intersect, returns null
-	
-	public static Point lineLineSegmentIntersect(Point a, Point b, Point lineP, Vector lineVec) {
-		
-		//points: p, q
-		//vectors: r, s
-		//scalars: t, u 
-		//p + tr = q + us
-		//if p + r is the line segment and q + s is the line, only t must be bounded from 0 - 1.
-		//this means we only have to solve for t, and if t is between 0 and 1, then there is an intersection at p + tr. 
-		
-		//solving for t
-		//t = ((q - p) * s) / (r * s)
-		//remember: cross product of 2d vectors gives a scalar
-		Vector qp = new Vector(a, lineP);
-		Vector s = new Vector(lineVec);
-		Vector r = new Vector(a, b);
-		
-		double t = MathTools.crossProduct2D(qp, s) / MathTools.crossProduct2D(r, s);
-		
-		//intersection
-		if(t >= 0 && t <= 1) {
-			//calculate intersection point
-			r.multiply(t);
-			Point ans = new Point(a);
-			ans.addVector(r);
-			return ans;
-		}
-		
-		//no intersection
-		return null;
-		
-	}
-	
 	//assuming that the points are arranged into a convex hull.
 	//get the centroid of each triangle, then take the weighted average of the centroids, using the area of each triangle as the weight.
 	public static Point getCentroid(ArrayList<Point> points) {
@@ -220,9 +185,9 @@ public class MathTools {
 	
 	//xRot and yRot in radians
 	//assumes default camera position is the +z axis
-	
-	public static Point3D cameraTransform(Point3D p, Point3D camera, double xRot, double yRot) {
-		Point3D ans = new Point3D(p);
+	//transforms into camera space, with the point relative to a camera facing down the z-axis. 
+	public static Vector3D cameraTransform(Vector3D p, Vector3D camera, double xRot, double yRot) {
+		Vector3D ans = new Vector3D(p);
 		ans.x -= camera.x;
 		ans.y -= camera.y;
 		ans.z -= camera.z;
@@ -234,12 +199,15 @@ public class MathTools {
 	}
 	
 	//used for scaling a point up to the window size after projection
-	
-	public static Point3D scalePoint(Point3D p) {
-		Point3D ans = new Point3D(p);
+	//also flips the y coordinate vertically about the center of the screen, or MainPanel.HEIGHT / 2 to correct for inverted y coordinate while
+	//drawing to screen. 
+	public static Vector3D scalePoint(Vector3D p) {
+		Vector3D ans = new Vector3D(p);
 		
 		ans.x = (p.x + 1d) * (0.5 * MainPanel.WIDTH);
 		ans.y = (p.y + 1d) * (0.5 * MainPanel.HEIGHT);
+		
+		ans.y = MainPanel.HEIGHT - ans.y;
 		
 		return ans;
 	}
@@ -267,7 +235,7 @@ public class MathTools {
 	//also handles texture coordinates with depth information
 	
 	//as of now, doesn't really work completely. This will either completely clip a triangle, or leave it untouched. I think it's due to the bad inputs
-	//yes, it was the bad inputs. When checking the normals to render, always check in real space.
+	//FIXED yes, it was the bad inputs. When checking the normals to render, always check in real space.
 	
 	public static ArrayList<Point3D[]> triangleClipAgainstPlane(Point3D planePoint, Vector3D planeNormal, Point3D[] inTri, 
 			Point[] inTex, ArrayList<Point[]> outTex, double[] inW, ArrayList<double[]> outW){
@@ -481,7 +449,7 @@ public class MathTools {
 	//assumes the camera is pointing in the +z direction
 	//stores the z buffer into the z dimension
 	
-	public static Point3D projectPoint(Point3D p, double[] wOut) {	
+	public static Vector3D projectPoint(Vector3D p, double[] wOut) {	
 		return multiplyMatrixVector(projectionMatrix, p, wOut);
 	}
 	
@@ -489,8 +457,8 @@ public class MathTools {
 	
 	//it's implied that the 4th element of the vector is 1
 	
-	public static Point3D multiplyMatrixVector(double[][] mat, Point3D p, double[] wOut) {
-		Point3D ans = new Point3D(0, 0, 0);
+	public static Vector3D multiplyMatrixVector(double[][] mat, Vector3D p, double[] wOut) {
+		Vector3D ans = new Vector3D(0, 0, 0);
 		
 		ans.x = p.x * mat[0][0] + p.y * mat[1][0] + p.z * mat[2][0] + mat[3][0];
 		ans.y = p.x * mat[0][1] + p.y * mat[1][1] + p.z * mat[2][1] + mat[3][1];
